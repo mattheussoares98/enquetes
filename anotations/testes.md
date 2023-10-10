@@ -8,3 +8,6 @@
 # rodar todos testes da aplicação
 1. Crie o arquivo ".vscode\launch.json" na pasta raiz da aplicação
 2. Clique no botão "Add configuration" e selecione a opção "run all tests"
+
+## PADRÕES PARA EXECUÇÃO
+1. Iniciar as variáveis no setUp

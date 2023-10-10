@@ -12,9 +12,8 @@
 ## Entidade
 1. Resposta de uso da classe abstrata
 
-
 > ## IMPORTS E EXPORTS
-1. Sempre que criar uma pasta, precisa criar outra com o mesmo nome e exportar tudo que está nessa pasta
+1. Sempre que criar uma pasta, precisa criar um arquivo com o mesmo nome e exportar tudo que está nessa pasta
 2. Package de terceiros deixa sempre na parte de cima do arquivo, separado
 3. Quando estiver importando uma biblioteca da própria pasta lib, não usar o package na frente do import
 4. Quando houver algum import do dart, deve ficar entre o package e os imports da própria lib
