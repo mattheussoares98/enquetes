@@ -11,10 +11,36 @@ class RemoteAuthentication {
   });
 
   Future<void>? auth(AuthenticationParams params) async {
+    final body = RemoteAuthenticationParams.fromDomain(params).toJson();
+    //poderia passar o e-mail e senha direto nos parâmetros da função mas ia
+    //quebrar o princípio de responsabilidade única. Por isso criou um factory
+    //na RemoteAuthenticationParams para usar o toJson dessa classe
     await httpClient.request(
       url: url,
       method: "post",
-      body: params.toJson(),
+      body: body,
     );
   }
+}
+
+class RemoteAuthenticationParams {
+  final String email;
+  final String password;
+  final Map? body;
+
+  RemoteAuthenticationParams({
+    required this.email,
+    required this.password,
+    this.body,
+  });
+
+  factory RemoteAuthenticationParams.fromDomain(
+    AuthenticationParams params,
+  ) =>
+      RemoteAuthenticationParams(
+        email: params.email,
+        password: params.password,
+      );
+
+  Map toJson() => {"email": email, "password": password};
 }

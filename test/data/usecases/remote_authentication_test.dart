@@ -25,13 +25,11 @@ void main() {
       email: faker.internet.email(),
       password: faker.internet.password(),
     );
-    //1º //sut = "System Under Test" ou "Sujeito Sob Teste"
   });
   test(
     "Should call HttpCient with correct value",
     () async {
       await sut.auth(params);
-      //2º // o teste que vai fazer
 
       verify(httpClient.request(
         url: url,
@@ -41,8 +39,6 @@ void main() {
           "password": params.password,
         },
       ));
-      //3º //o que é esperado
-      //o verify utiliza o mockito
     },
   );
 }
