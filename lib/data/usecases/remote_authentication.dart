@@ -1,5 +1,6 @@
 import '../../domain/usecases/usecases.dart';
 import '../http/http.dart';
+import '../../domain/helpers/helpers.dart';
 
 class RemoteAuthentication {
   final HttpClient httpClient;
@@ -15,11 +16,16 @@ class RemoteAuthentication {
     //poderia passar o e-mail e senha direto nos parâmetros da função mas ia
     //quebrar o princípio de responsabilidade única. Por isso criou um factory
     //na RemoteAuthenticationParams para usar o toJson dessa classe
-    await httpClient.request(
-      url: url,
-      method: "post",
-      body: body,
-    );
+
+    try {
+      await httpClient.request(
+        url: url,
+        method: "post",
+        body: body,
+      );
+    } on HttpError {
+      throw DomainError.unexpected;
+    }
   }
 }
 

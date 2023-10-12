@@ -1,3 +1,4 @@
+import 'package:enquetes/domain/helpers/helpers.dart';
 import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -9,10 +10,10 @@ import 'package:enquetes/domain/usecases/usecases.dart';
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
-  late final RemoteAuthentication sut;
-  late final HttpClient httpClient;
-  late final String url;
-  late final AuthenticationParams params;
+  late RemoteAuthentication sut;
+  late HttpClient httpClient;
+  late String url;
+  late AuthenticationParams params;
 
   setUp(() {
     httpClient = HttpClientSpy();
@@ -39,6 +40,23 @@ void main() {
           "password": params.password,
         },
       ));
+    },
+  );
+
+  test(
+    "Should trow UnexpectedError if HttpClient returns 400",
+    () async {
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenThrow(HttpError.badRequest);
+
+      final future = sut.auth(params);
+
+      expect(future, throwsA(DomainError.unexpected));
     },
   );
 }
