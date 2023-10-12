@@ -4,7 +4,7 @@ import '../../domain/helpers/helpers.dart';
 import '../../domain/entities/entities.dart';
 import '/data/models/models.dart';
 
-class RemoteAuthentication {
+class RemoteAuthentication implements Authentication {
   final HttpClient httpClient;
   final String url;
 
@@ -13,6 +13,7 @@ class RemoteAuthentication {
     required this.url,
   });
 
+  @override
   Future<AccountEntity?>? auth(AuthenticationParams params) async {
     final body = RemoteAuthenticationParams.fromDomain(params).toJson();
     //poderia passar o e-mail e senha direto nos parâmetros da função mas ia
@@ -36,6 +37,7 @@ class RemoteAuthentication {
           ? DomainError.invalidCredentials
           : DomainError.unexpected;
     }
+    return null;
   }
 }
 
