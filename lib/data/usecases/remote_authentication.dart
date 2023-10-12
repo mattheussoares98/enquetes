@@ -13,7 +13,7 @@ class RemoteAuthentication {
     required this.url,
   });
 
-  Future<AccountEntity> auth(AuthenticationParams params) async {
+  Future<AccountEntity?>? auth(AuthenticationParams params) async {
     final body = RemoteAuthenticationParams.fromDomain(params).toJson();
     //poderia passar o e-mail e senha direto nos parâmetros da função mas ia
     //quebrar o princípio de responsabilidade única. Por isso criou um factory
@@ -25,8 +25,12 @@ class RemoteAuthentication {
         method: "post",
         body: body,
       );
+      AccountEntity? accountEntity =
+          RemoteAccountModel.fromJson(httpResponse).toEntity();
 
-      return RemoteAccountModel.fromJson(httpResponse).toEntity();
+      if (accountEntity != null) {
+        return accountEntity;
+      }
     } on HttpError catch (error) {
       throw error == HttpError.unauthorized
           ? DomainError.invalidCredentials
