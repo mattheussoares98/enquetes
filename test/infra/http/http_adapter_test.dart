@@ -17,14 +17,17 @@ class HttpAdapter {
     required String method,
     Map<String, String>? body,
   }) async {
-    Map<String, String> headers = {
+    const Map<String, String> headers = {
       "Content-Type": "application/json",
       "accept": "application/json",
     };
+
+    final jsonBody = body == null ? null : json.encode(body);
+
     return await client.post(
       url,
       headers: headers,
-      body: json.encode(body),
+      body: jsonBody,
     );
   }
 }
@@ -58,6 +61,16 @@ void main() {
           "accept": "application/json",
         },
         body: json.encode({"any": "any"}),
+      ),
+    );
+  });
+  test("Should call post without body", () async {
+    await sut.request(url: url, method: "post");
+
+    verify(
+      () => client.post(
+        url,
+        headers: any(named: "headers"),
       ),
     );
   });
