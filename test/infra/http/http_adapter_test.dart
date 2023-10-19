@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
@@ -13,8 +15,10 @@ class HttpAdapter {
   Future<Response> request({
     required Uri url,
     required String method,
+    Map<String, String>? body,
   }) async {
-    return await client.post(url);
+    Map<String, String> headers = {"Content-Type": "application/json"};
+    return await client.post(url, headers: headers, body: json.encode(body));
   }
 }
 
@@ -28,15 +32,26 @@ void main() {
     sut = HttpAdapter(client: client);
     url = Uri.parse(faker.internet.httpUrl());
 
-    when(() => client.post(url))
-        .thenAnswer((_) async => Response('Hello, World!', 200));
+    when(
+      () => client.post(
+        url,
+        headers: any(named: "headers"),
+        body: any(named: "body"),
+      ),
+    ).thenAnswer((_) async => Response('anything', 200));
   });
   test(
     "Should call HttpCient with correct value",
     () async {
       await sut.request(url: url, method: "post");
 
-      verify(() => client.post(url));
+      verify(
+        () => client.post(
+          url,
+          headers: any(named: "headers"),
+          body: any(named: "body"),
+        ),
+      );
     },
   );
 }
