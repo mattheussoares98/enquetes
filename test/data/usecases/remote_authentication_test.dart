@@ -1,6 +1,6 @@
 import 'package:enquetes/domain/helpers/helpers.dart';
 import 'package:faker/faker.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 import 'package:enquetes/data/http/http.dart';
@@ -20,10 +20,10 @@ void main() {
         "name": faker.person.name(),
       };
 
-  PostExpectation mockRequest() => when(httpClient.request(
-      url: anyNamed("url"),
-      method: anyNamed("method"),
-      body: anyNamed("body")));
+  When mockRequest() => when(() => httpClient.request(
+      url: any(named: "url"),
+      method: any(named: "method"),
+      body: any(named: "body")));
 
   void mockHttpData(Map data) {
     mockRequest().thenAnswer((_) async => data);
@@ -51,14 +51,14 @@ void main() {
     () async {
       await sut.auth(params);
 
-      verify(httpClient.request(
-        url: url,
-        method: "post",
-        body: {
-          "email": params.email,
-          "password": params.password,
-        },
-      ));
+      verify(() => httpClient.request(
+            url: url,
+            method: "post",
+            body: {
+              "email": params.email,
+              "password": params.password,
+            },
+          ));
     },
   );
 

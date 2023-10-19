@@ -1,34 +1,42 @@
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-class ClientSpy extends Mock implements Client {}
+class HttpClientSpy extends Mock implements Client {}
 
 class HttpAdapter {
   final Client client;
 
-  HttpAdapter(this.client);
+  HttpAdapter({required this.client});
 
   Future<Response> request({
-    required String url,
+    required Uri url,
     required String method,
-    Map? body,
   }) async {
-    return await client.post(Uri.parse(url));
+    return await client.post(url);
   }
 }
 
 void main() {
-  group("post", () {
-    test("Should call post with correct values", () async {
-      final client = ClientSpy();
-      final sut = HttpAdapter(client);
-      final url = faker.internet.httpUrl();
+  late HttpAdapter sut;
+  late Uri url;
+  late Client client;
 
+  setUp(() {
+    client = HttpClientSpy();
+    sut = HttpAdapter(client: client);
+    url = Uri.parse(faker.internet.httpUrl());
+
+    when(() => client.post(url))
+        .thenAnswer((_) async => Response('Hello, World!', 200));
+  });
+  test(
+    "Should call HttpCient with correct value",
+    () async {
       await sut.request(url: url, method: "post");
 
-      verify(client.post(Uri.parse(url)));
-    });
-  });
+      verify(() => client.post(url));
+    },
+  );
 }
