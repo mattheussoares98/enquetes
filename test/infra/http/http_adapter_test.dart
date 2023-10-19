@@ -17,8 +17,15 @@ class HttpAdapter {
     required String method,
     Map<String, String>? body,
   }) async {
-    Map<String, String> headers = {"Content-Type": "application/json"};
-    return await client.post(url, headers: headers, body: json.encode(body));
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "accept": "application/json",
+    };
+    return await client.post(
+      url,
+      headers: headers,
+      body: json.encode(body),
+    );
   }
 }
 
@@ -40,18 +47,18 @@ void main() {
       ),
     ).thenAnswer((_) async => Response('anything', 200));
   });
-  test(
-    "Should call HttpCient with correct value",
-    () async {
-      await sut.request(url: url, method: "post");
+  test("Should call HttpCient with correct value", () async {
+    await sut.request(url: url, method: "post", body: {"any": "any"});
 
-      verify(
-        () => client.post(
-          url,
-          headers: any(named: "headers"),
-          body: any(named: "body"),
-        ),
-      );
-    },
-  );
+    verify(
+      () => client.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "accept": "application/json",
+        },
+        body: json.encode({"any": "any"}),
+      ),
+    );
+  });
 }
