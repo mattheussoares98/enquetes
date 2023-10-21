@@ -1,21 +1,23 @@
 import 'dart:convert';
-
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
+import 'package:enquetes/data/http/http.dart';
+
 class HttpClientSpy extends Mock implements Client {}
 
-class HttpAdapter {
+class HttpAdapter implements HttpClient {
   final Client client;
 
   HttpAdapter({required this.client});
 
-  Future<Response> request({
-    required Uri url,
-    required String method,
-    Map<String, String>? body,
+  @override
+  Future<Map>? request({
+    required String? url,
+    required String? method,
+    Map? body,
   }) async {
     const Map<String, String> headers = {
       "Content-Type": "application/json",
@@ -24,38 +26,51 @@ class HttpAdapter {
 
     final jsonBody = body == null ? null : json.encode(body);
 
-    return await client.post(
-      url,
+    final response = await client.post(
+      Uri.parse(url!),
       headers: headers,
       body: jsonBody,
     );
+
+    return json.decode(response.body);
   }
 }
 
 void main() {
   late HttpAdapter sut;
-  late Uri url;
+  late String url;
   late Client client;
+  late Uri uri;
 
   setUp(() {
     client = HttpClientSpy();
     sut = HttpAdapter(client: client);
-    url = Uri.parse(faker.internet.httpUrl());
+    url = faker.internet.httpUrl();
+    uri = Uri.parse(url);
 
     when(
       () => client.post(
-        url,
+        uri,
         headers: any(named: "headers"),
         body: any(named: "body"),
       ),
-    ).thenAnswer((_) async => Response('anything', 200));
+    ).thenAnswer((_) async => Response('{"any": "any"}', 200));
+
+    when(
+      () => client.post(
+        uri,
+        headers: any(named: "headers"),
+      ),
+    ).thenAnswer(
+      (_) async => Response('{"any": "any"}', 200),
+    );
   });
   test("Should call HttpCient with correct value", () async {
     await sut.request(url: url, method: "post", body: {"any": "any"});
 
     verify(
       () => client.post(
-        url,
+        uri,
         headers: {
           "Content-Type": "application/json",
           "accept": "application/json",
@@ -69,9 +84,15 @@ void main() {
 
     verify(
       () => client.post(
-        url,
+        uri,
         headers: any(named: "headers"),
       ),
     );
+  });
+
+  test("Should return data if post return 200", () async {
+    final response = await sut.request(url: url, method: "post");
+
+    expect(response, {"any": "any"});
   });
 }
