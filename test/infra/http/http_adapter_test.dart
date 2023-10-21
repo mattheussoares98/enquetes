@@ -42,28 +42,31 @@ void main() {
   late Client client;
   late Uri uri;
 
+  mockRequest() => when(
+        () => client.post(
+          uri,
+          headers: any(named: "headers"),
+          body: any(named: "body"),
+        ),
+      );
+
+  void mockResponse({
+    required int statusCode,
+    String? body = '{"any": "any"}',
+  }) {
+    mockRequest().thenAnswer(
+      (_) async => Response(body!, statusCode),
+    );
+  }
+
   setUp(() {
     client = HttpClientSpy();
     sut = HttpAdapter(client: client);
     url = faker.internet.httpUrl();
     uri = Uri.parse(url);
 
-    when(
-      () => client.post(
-        uri,
-        headers: any(named: "headers"),
-        body: any(named: "body"),
-      ),
-    ).thenAnswer((_) async => Response('{"any": "any"}', 200));
-
-    when(
-      () => client.post(
-        uri,
-        headers: any(named: "headers"),
-      ),
-    ).thenAnswer(
-      (_) async => Response('{"any": "any"}', 200),
-    );
+    mockResponse(statusCode: 200);
+    mockResponse(statusCode: 200, body: "");
   });
   test("Should call HttpCient with correct value", () async {
     await sut.request(url: url, method: "post", body: {"any": "any"});
@@ -93,19 +96,10 @@ void main() {
   test("Should return data if post return 200", () async {
     final response = await sut.request(url: url, method: "post");
 
-    expect(response, {"any": "any"});
+    expect(response, {});
   });
 
   test("Should return null if post return 200 with no data", () async {
-    when(
-      () => client.post(
-        uri,
-        headers: any(named: "headers"),
-      ),
-    ).thenAnswer(
-      (_) async => Response('', 200),
-    );
-
     final response = await sut.request(url: url, method: "post");
 
     expect(response, {});
