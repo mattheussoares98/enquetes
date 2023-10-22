@@ -84,7 +84,7 @@ void main() {
     expect(response, {});
   });
 
-  test("Should return null if post returns 204", () async {
+  test("Should return null if post returns 204 with no data", () async {
     mockResponse(statusCode: 204);
 
     final response = await sut.request(url: url, method: "post");
