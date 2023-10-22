@@ -34,7 +34,6 @@ class HttpAdapter implements HttpClient {
         response = Response("", 500);
       }
     } catch (error) {
-      print("error: $error");
       throw HttpError.serverError;
     }
 
