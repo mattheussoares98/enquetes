@@ -43,6 +43,16 @@ void main() {
     mockResponse(statusCode: 200, body: "");
   });
 
+  group("shared", () {
+    test("Should throw ServerError if invalid method is provided", () async {
+      final future = sut.request(
+        url: url,
+        method: "invalid method",
+      );
+
+      expect(future, throwsA(HttpError.serverError));
+    });
+  });
   group("post", () {
     test("Should call HttpCient with correct value", () async {
       await sut.request(url: url, method: "post", body: {"any": "any"});
