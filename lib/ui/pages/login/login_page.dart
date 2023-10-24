@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../components/components.dart';
+import '../pages.dart';
+import '../../components/components.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  final LoginPresenter? loginPresenter;
+  const LoginPage({
+    required this.loginPresenter,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +30,7 @@ class LoginPage extends StatelessWidget {
                         icon: Icon(Icons.email),
                       ),
                       keyboardType: TextInputType.emailAddress,
+                      onChanged: loginPresenter?.validateEmail,
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -33,6 +39,7 @@ class LoginPage extends StatelessWidget {
                         icon: Icon(Icons.lock),
                       ),
                       obscureText: true,
+                      onChanged: loginPresenter?.validatePassword,
                     ),
                     const SizedBox(height: 30),
                     ElevatedButton(
