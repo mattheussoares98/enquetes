@@ -1,6 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../pages/pages.dart';
+
+class LoginPresenterPersonal implements LoginPresenter {
+  final StreamController<String> emailErrorController =
+      StreamController<String>.broadcast();
+
+  @override
+  Stream<String> get emailErrorStream => emailErrorController.stream;
+
+  @override
+  void validateEmail(String email) {}
+
+  @override
+  void validatePassword(String password) {}
+}
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -70,7 +86,7 @@ class App extends StatelessWidget {
           color: primaryColorDark,
         ),
       ),
-      home: const LoginPage(loginPresenter: null),
+      home: LoginPage(loginPresenter: LoginPresenterPersonal()),
     );
   }
 }

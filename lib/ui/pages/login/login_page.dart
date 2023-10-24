@@ -4,7 +4,7 @@ import '../pages.dart';
 import '../../components/components.dart';
 
 class LoginPage extends StatelessWidget {
-  final LoginPresenter? loginPresenter;
+  final LoginPresenter loginPresenter;
   const LoginPage({
     required this.loginPresenter,
     super.key,
@@ -24,22 +24,28 @@ class LoginPage extends StatelessWidget {
               child: Form(
                 child: Column(
                   children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: "Email",
-                        icon: Icon(Icons.email),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                      onChanged: loginPresenter?.validateEmail,
-                    ),
+                    StreamBuilder(
+                        stream: loginPresenter.emailErrorStream,
+                        builder: (context, snapshot) {
+                          return TextFormField(
+                            decoration: InputDecoration(
+                              labelText: "Email",
+                              icon: const Icon(Icons.email),
+                              errorText: snapshot.data,
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: loginPresenter.validateEmail,
+                          );
+                        }),
                     const SizedBox(height: 10),
                     TextFormField(
+                      key: const Key('PasswordKeyForTests'),
                       decoration: const InputDecoration(
                         labelText: "Senha",
                         icon: Icon(Icons.lock),
                       ),
                       obscureText: true,
-                      onChanged: loginPresenter?.validatePassword,
+                      onChanged: loginPresenter.validatePassword,
                     ),
                     const SizedBox(height: 30),
                     ElevatedButton(

@@ -1,21 +1,36 @@
+import "dart:async";
+
 import "package:enquetes/ui/pages/pages.dart";
 import "package:faker/faker.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mocktail/mocktail.dart";
 
-class LoginPresenterSpy extends Mock implements LoginPresenter {}
+class LoginPresenterSpy extends Mock implements LoginPresenter {
+  StreamController<String> emailErrorController =
+      StreamController<String>.broadcast();
+
+  @override
+  Stream<String> get emailErrorStream => emailErrorController.stream;
+}
 
 void main() {
-  LoginPresenter presenter = LoginPresenterSpy();
+  late LoginPresenter presenter;
+  late StreamController<String> emailErrorController;
+
   group("Test formFields", () {
     Future<void> loadPage(WidgetTester tester) async {
+      presenter = LoginPresenterSpy();
+      emailErrorController = StreamController<String>();
+
       final loginPage = MaterialApp(
           home: LoginPage(
         loginPresenter: presenter,
       ));
       await tester.pumpWidget(loginPage);
     }
+
+    tearDown(() => emailErrorController.close());
 
     testWidgets(
       "Should load with correct initial state",
@@ -73,9 +88,38 @@ void main() {
         verify(() => presenter.validateEmail(email));
 
         final password = faker.internet.email();
-        await tester.enterText(find.bySemanticsLabel("Senha"), password);
+        await tester.enterText(
+            find.byKey(
+              //usando outra forma para identificar o widget que quero testar.
+              //Coloquei uma chave Key pra esse widget e aqui consultei por essa Key
+              const Key("PasswordKeyForTests"),
+            ),
+            password);
 
         verify(() => presenter.validatePassword(password));
+      },
+    );
+
+    testWidgets(
+      "Should present error if email is invalid",
+      (WidgetTester tester) async {
+        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
+        //UMA STREAM DO TIPO presenter.emailErrorStream
+        await loadPage(tester);
+
+        when(() => presenter.emailErrorStream)
+            .thenAnswer((_) => emailErrorController.stream);
+        //sempre que houver alteração no stream, vai ser atualizado o valor
+        //nessa versão mocada
+
+        emailErrorController.add("any error");
+        //se o controller emitir qualquer texto, essa string vai do strem vai
+        //ser emitida e "cair" no formfield, exibindo a mensagem na tela
+
+        await tester.pump();
+        //força uma renderização da página
+
+        expect(find.text("any error"), findsOneWidget);
       },
     );
   });
