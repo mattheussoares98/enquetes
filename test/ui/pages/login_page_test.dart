@@ -4,11 +4,15 @@ import "package:flutter_test/flutter_test.dart";
 
 void main() {
   group("Test formFields", () {
+    Future<void> loadPage(WidgetTester tester) async {
+      const loginPage = MaterialApp(home: LoginPage());
+      await tester.pumpWidget(loginPage);
+    }
+
     testWidgets(
       "Should load with correct initial state",
       (WidgetTester tester) async {
-        const loginPage = MaterialApp(home: LoginPage());
-        await tester.pumpWidget(loginPage);
+        await loadPage(tester);
         //precisa fazer isso acima pra indicar qual widget está testando. No
         //caso está testando o LoginPage
 
