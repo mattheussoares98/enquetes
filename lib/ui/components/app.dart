@@ -19,7 +19,7 @@ class LoginPresenterPersonal implements LoginPresenter {
 }
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App();
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +31,12 @@ class App extends StatelessWidget {
       title: "4dev",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textSelectionTheme: const TextSelectionThemeData(
-          cursorColor: primaryColorLight,
-        ),
         focusColor: primaryColorDark,
         primaryColor: primaryColor,
         primaryColorDark: primaryColorDark,
         primaryColorLight: primaryColorLight,
         textTheme: const TextTheme(
-          headlineLarge: TextStyle(
+          headline1: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
             color: primaryColorDark,
@@ -47,7 +44,6 @@ class App extends StatelessWidget {
         ),
         inputDecorationTheme: const InputDecorationTheme(
           focusColor: primaryColorDark,
-          iconColor: primaryColorLight,
           labelStyle: TextStyle(
             color: primaryColor,
           ),
@@ -70,16 +66,6 @@ class App extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
-          ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(primaryColor),
-          ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: primaryColor,
           ),
         ),
         iconTheme: const IconThemeData(

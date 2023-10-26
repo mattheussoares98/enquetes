@@ -6,8 +6,7 @@ import '../../components/components.dart';
 class LoginPage extends StatelessWidget {
   final LoginPresenter loginPresenter;
   const LoginPage({
-    required this.loginPresenter,
-    super.key,
+    @required this.loginPresenter,
   });
 
   @override
@@ -48,14 +47,13 @@ class LoginPage extends StatelessWidget {
                       onChanged: loginPresenter.validatePassword,
                     ),
                     const SizedBox(height: 30),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: null,
                       child: Text("Entrar".toUpperCase()),
                     ),
-                    TextButton.icon(
+                    IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.person),
-                      label: const Text("Criar conta"),
                     ),
                   ],
                 ),

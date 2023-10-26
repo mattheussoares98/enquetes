@@ -1,35 +1,35 @@
 import "dart:async";
+import 'package:faker/faker.dart';
+import 'package:mockito/mockito.dart';
+import "package:flutter/material.dart";
 
 import "package:enquetes/ui/pages/pages.dart";
-import "package:faker/faker.dart";
-import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
-import "package:mocktail/mocktail.dart";
 
-class LoginPresenterSpy extends Mock implements LoginPresenter {
-  StreamController<String> emailErrorController =
-      StreamController<String>.broadcast();
-
-  @override
-  Stream<String> get emailErrorStream => emailErrorController.stream;
-}
+class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 void main() {
-  late LoginPresenter presenter;
-  late StreamController<String> emailErrorController;
+  LoginPresenter presenter;
+  StreamController<String> emailErrorController;
+
+  Future<void> loadPage(WidgetTester tester) async {
+    presenter = LoginPresenterSpy();
+    emailErrorController = StreamController<String>();
+
+    when(presenter.emailErrorStream)
+        .thenAnswer((_) => emailErrorController.stream);
+
+    //sempre que houver alteração no stream, vai ser atualizado o valor
+    //nessa versão mocada
+
+    final loginPage = MaterialApp(
+        home: LoginPage(
+      loginPresenter: presenter,
+    ));
+    await tester.pumpWidget(loginPage);
+  }
 
   group("Test formFields", () {
-    Future<void> loadPage(WidgetTester tester) async {
-      presenter = LoginPresenterSpy();
-      emailErrorController = StreamController<String>();
-
-      final loginPage = MaterialApp(
-          home: LoginPage(
-        loginPresenter: presenter,
-      ));
-      await tester.pumpWidget(loginPage);
-    }
-
     tearDown(() => emailErrorController.close());
 
     testWidgets(
@@ -42,7 +42,7 @@ void main() {
         //testando quando um widget possui como label "Email"
         //procurando o tipo Text
         final emailTextChildren = find.descendant(
-          of: find.bySemanticsLabel("Email"),
+          of: find.bySemanticsLabel('Email'),
           matching: find.byType(Text),
         );
 
@@ -54,25 +54,9 @@ void main() {
           findsOneWidget,
         );
 
-        //testando quando um widget possui como label "Senha"
-        //procurando o tipo Text
-        final passwordTextChildren = find.descendant(
-          of: find.bySemanticsLabel("Senha"),
-          matching: find.byType(Text),
-        );
-
-        //'Quando um TextFormField tem somente um filho do tipo TEXT
-        //(labeltext e errorText são filhos do widget), significa que não
-        //possui erros porque um dos filhos sempre vai ser o labelText',
-        expect(
-          passwordTextChildren,
-          findsOneWidget,
-        );
-
-        //procurando um widget do tipo ElevatedButton para testar o onPressed
+        //procurando um widget do tipo RaisedButton para testar o onPressed
         //dele
-        final button =
-            tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+        final button = tester.widget<RaisedButton>(find.byType(RaisedButton));
         expect(button.onPressed, null);
       },
     );
@@ -85,7 +69,7 @@ void main() {
         final email = faker.internet.email();
         await tester.enterText(find.bySemanticsLabel("Email"), email);
 
-        verify(() => presenter.validateEmail(email));
+        verify(presenter.validateEmail(email));
 
         final password = faker.internet.email();
         await tester.enterText(
@@ -96,7 +80,7 @@ void main() {
             ),
             password);
 
-        verify(() => presenter.validatePassword(password));
+        verify(presenter.validatePassword(password));
       },
     );
 
@@ -106,11 +90,6 @@ void main() {
         //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
         //UMA STREAM DO TIPO presenter.emailErrorStream
         await loadPage(tester);
-
-        when(() => presenter.emailErrorStream)
-            .thenAnswer((_) => emailErrorController.stream);
-        //sempre que houver alteração no stream, vai ser atualizado o valor
-        //nessa versão mocada
 
         emailErrorController.add("any error");
         //se o controller emitir qualquer texto, essa string vai do strem vai

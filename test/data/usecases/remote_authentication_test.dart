@@ -1,6 +1,6 @@
 import 'package:enquetes/domain/helpers/helpers.dart';
 import 'package:faker/faker.dart';
-import 'package:mocktail/mocktail.dart';
+import "package:mockito/mockito.dart";
 import 'package:test/test.dart';
 
 import 'package:enquetes/data/http/http.dart';
@@ -10,20 +10,20 @@ import 'package:enquetes/domain/usecases/usecases.dart';
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
-  late RemoteAuthentication sut;
-  late HttpClient httpClient;
-  late String url;
-  late AuthenticationParams params;
+  RemoteAuthentication sut;
+  HttpClient httpClient;
+  String url;
+  AuthenticationParams params;
 
   Map mockValidData() => {
         "accessToken": faker.guid.guid(),
         "name": faker.person.name(),
       };
 
-  When mockRequest() => when(() => httpClient.request(
-      url: any(named: "url"),
-      method: any(named: "method"),
-      body: any(named: "body")));
+  PostExpectation mockRequest() => when(httpClient.request(
+      url: anyNamed("url"),
+      method: anyNamed("method"),
+      body: anyNamed("body")));
 
   void mockHttpData(Map data) {
     mockRequest().thenAnswer((_) async => data);
@@ -51,14 +51,14 @@ void main() {
     () async {
       await sut.auth(params);
 
-      verify(() => httpClient.request(
-            url: url,
-            method: "post",
-            body: {
-              "email": params.email,
-              "password": params.password,
-            },
-          ));
+      verify(httpClient.request(
+        url: url,
+        method: "post",
+        body: {
+          "email": params.email,
+          "password": params.password,
+        },
+      ));
     },
   );
 
@@ -112,7 +112,7 @@ void main() {
 
       final account = await sut.auth(params);
 
-      expect(account!.token, validData["accessToken"]);
+      expect(account.token, validData["accessToken"]);
     },
   );
   test(

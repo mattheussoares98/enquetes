@@ -2,19 +2,20 @@ import '../../domain/usecases/usecases.dart';
 import '../http/http.dart';
 import '../../domain/helpers/helpers.dart';
 import '../../domain/entities/entities.dart';
-import '/data/models/models.dart';
+import '../../data/models/models.dart';
+import 'package:meta/meta.dart';
 
 class RemoteAuthentication implements Authentication {
   final HttpClient httpClient;
   final String url;
 
   RemoteAuthentication({
-    required this.httpClient,
-    required this.url,
+    @required this.httpClient,
+    @required this.url,
   });
 
   @override
-  Future<AccountEntity?>? auth(AuthenticationParams params) async {
+  Future<AccountEntity> auth(AuthenticationParams params) async {
     final body = RemoteAuthenticationParams.fromDomain(params).toJson();
     //poderia passar o e-mail e senha direto nos parâmetros da função mas ia
     //quebrar o princípio de responsabilidade única. Por isso criou um factory
@@ -26,7 +27,7 @@ class RemoteAuthentication implements Authentication {
         method: "post",
         body: body,
       );
-      AccountEntity? accountEntity =
+      AccountEntity accountEntity =
           RemoteAccountModel.fromJson(httpResponse).toEntity();
 
       if (accountEntity != null) {
@@ -44,11 +45,11 @@ class RemoteAuthentication implements Authentication {
 class RemoteAuthenticationParams {
   final String email;
   final String password;
-  final Map? body;
+  final Map body;
 
   RemoteAuthenticationParams({
-    required this.email,
-    required this.password,
+    @required this.email,
+    @required this.password,
     this.body,
   });
 
