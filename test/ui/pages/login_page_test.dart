@@ -11,13 +11,17 @@ class LoginPresenterSpy extends Mock implements LoginPresenter {}
 void main() {
   LoginPresenter presenter;
   StreamController<String> emailErrorController;
+  StreamController<String> passwordErrorController;
 
   Future<void> loadPage(WidgetTester tester) async {
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController<String>();
+    passwordErrorController = StreamController<String>();
 
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
+    when(presenter.passwordErrorStream)
+        .thenAnswer((_) => passwordErrorController.stream);
 
     //sempre que houver alteração no stream, vai ser atualizado o valor
     //nessa versão mocada
@@ -30,7 +34,12 @@ void main() {
   }
 
   group("Test formFields", () {
-    tearDown(() => emailErrorController.close());
+    tearDown(
+      () {
+        emailErrorController.close();
+        passwordErrorController.close();
+      },
+    );
 
     testWidgets(
       "Should load with correct initial state",
@@ -142,6 +151,71 @@ void main() {
         expect(
           find.descendant(
             of: find.bySemanticsLabel('Email'),
+            matching: find.byType(Text),
+          ),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "Should present error if password is invalid",
+      (WidgetTester tester) async {
+        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
+        //UMA STREAM DO TIPO presenter.emailErrorStream
+        await loadPage(tester);
+
+        passwordErrorController.add("any error");
+        //se o controller emitir qualquer texto, essa string vai do strem vai
+        //ser emitida e "cair" no formfield, exibindo a mensagem na tela
+
+        await tester.pump();
+        //força uma renderização da página
+
+        expect(find.text("any error"), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "Should present no error if password is valid",
+      (WidgetTester tester) async {
+        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
+        //UMA STREAM DO TIPO presenter.passwordErrorStream
+        await loadPage(tester);
+
+        passwordErrorController.add(null);
+        //se o controller emitir qualquer texto, essa string vai do strem vai
+        //ser emitida e "cair" no formfield, exibindo a mensagem na tela
+
+        await tester.pump();
+        //força uma renderização da página
+
+        expect(
+          find.descendant(
+            of: find.bySemanticsLabel('Senha'),
+            matching: find.byType(Text),
+          ),
+          findsOneWidget,
+        );
+      },
+    );
+    testWidgets(
+      "Should present no error if password is valid",
+      (WidgetTester tester) async {
+        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
+        //UMA STREAM DO TIPO presenter.passwordErrorStream
+        await loadPage(tester);
+
+        passwordErrorController.add("");
+        //se o controller emitir qualquer texto, essa string vai do strem vai
+        //ser emitida e "cair" no formfield, exibindo a mensagem na tela
+
+        await tester.pump();
+        //força uma renderização da página
+
+        expect(
+          find.descendant(
+            of: find.bySemanticsLabel('Senha'),
             matching: find.byType(Text),
           ),
           findsOneWidget,

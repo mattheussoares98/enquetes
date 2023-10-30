@@ -7,9 +7,14 @@ import '../pages/pages.dart';
 class LoginPresenterPersonal implements LoginPresenter {
   final StreamController<String> emailErrorController =
       StreamController<String>.broadcast();
+  final StreamController<String> passwordErrorController =
+      StreamController<String>.broadcast();
 
   @override
   Stream<String> get emailErrorStream => emailErrorController.stream;
+
+  @override
+  Stream<String> get passwordErrorStream => passwordErrorController.stream;
 
   @override
   void validateEmail(String email) {}
