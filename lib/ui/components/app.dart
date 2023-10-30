@@ -26,6 +26,9 @@ class LoginPresenterPersonal implements LoginPresenter {
 
   @override
   void validatePassword(String password) {}
+
+  @override
+  void auth() {}
 }
 
 class App extends StatelessWidget {
