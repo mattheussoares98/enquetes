@@ -16,14 +16,16 @@ void main() {
   StreamController<bool> isLoadingController;
   StreamController<String> mainErrorController;
 
-  Future<void> loadPage(WidgetTester tester) async {
+  void initStreams() {
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController<String>();
     passwordErrorController = StreamController<String>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
     mainErrorController = StreamController<String>();
+  }
 
+  void mockStreams() {
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
     when(presenter.passwordErrorStream)
@@ -34,9 +36,19 @@ void main() {
         .thenAnswer((_) => isLoadingController.stream);
     when(presenter.mainErrorStream)
         .thenAnswer((_) => mainErrorController.stream);
+  }
 
-    //sempre que houver alteração no stream, vai ser atualizado o valor
-    //nessa versão mocada
+  void closeStreams() {
+    emailErrorController.close();
+    passwordErrorController.close();
+    isFormValidController.close();
+    isLoadingController.close();
+    mainErrorController.close();
+  }
+
+  Future<void> loadPage(WidgetTester tester) async {
+    initStreams();
+    mockStreams();
 
     final loginPage = MaterialApp(
         home: LoginPage(
@@ -48,11 +60,7 @@ void main() {
   group("Test formFields", () {
     tearDown(
       () {
-        emailErrorController.close();
-        passwordErrorController.close();
-        isFormValidController.close();
-        isLoadingController.close();
-        mainErrorController.close();
+        closeStreams();
       },
     );
 
