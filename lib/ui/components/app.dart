@@ -29,6 +29,10 @@ class LoginPresenterPersonal implements LoginPresenter {
 
   @override
   void auth() {}
+
+  @override
+  // TODO: implement isLoadingStream
+  Stream get isLoadingStream => throw UnimplementedError();
 }
 
 class App extends StatelessWidget {

@@ -13,12 +13,14 @@ void main() {
   StreamController<String> emailErrorController;
   StreamController<String> passwordErrorController;
   StreamController<bool> isFormValidController;
+  StreamController<bool> isLoadingController;
 
   Future<void> loadPage(WidgetTester tester) async {
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController<String>();
     passwordErrorController = StreamController<String>();
     isFormValidController = StreamController<bool>();
+    isLoadingController = StreamController<bool>();
 
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
@@ -26,6 +28,8 @@ void main() {
         .thenAnswer((_) => passwordErrorController.stream);
     when(presenter.isFormValidStream)
         .thenAnswer((_) => isFormValidController.stream);
+    when(presenter.isLoadingStream)
+        .thenAnswer((_) => isLoadingController.stream);
 
     //sempre que houver alteração no stream, vai ser atualizado o valor
     //nessa versão mocada
@@ -43,6 +47,7 @@ void main() {
         emailErrorController.close();
         passwordErrorController.close();
         isFormValidController.close();
+        isLoadingController.close();
       },
     );
 
@@ -265,19 +270,15 @@ void main() {
     );
 
     testWidgets(
-      "Should call authentication on form submit",
+      "Should present loading",
       (WidgetTester tester) async {
         await loadPage(tester);
 
-        isFormValidController.add(true);
+        isLoadingController.add(true);
 
         await tester.pump();
-        await tester.tap(find.byType(RaisedButton));
-        await tester.pump();
 
-        verify(presenter.auth())
-            //garante que o método vai ser chamado somente uma vez
-            .called(1);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
       },
     );
   });
