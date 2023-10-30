@@ -311,5 +311,17 @@ void main() {
         expect(find.text("Erro para efetuar o login"), findsOneWidget);
       },
     );
+    testWidgets(
+      "Should close streams on dispose",
+      (WidgetTester tester) async {
+        await loadPage(tester);
+
+        addTearDown(() {
+          //chama quando o widget que está sendo usado no teste é encerrado.
+          //Então aqui é ctz que o LoginPage está sendo encerrado
+          verify(presenter.dispose()).called(1);
+        });
+      },
+    );
   });
 }

@@ -35,6 +35,9 @@ class LoginPresenterPersonal implements LoginPresenter {
 
   @override
   Stream get mainErrorStream => throw UnimplementedError();
+
+  @override
+  void dispose() {}
 }
 
 class App extends StatelessWidget {
