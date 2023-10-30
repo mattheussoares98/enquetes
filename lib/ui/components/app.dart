@@ -32,6 +32,9 @@ class LoginPresenterPersonal implements LoginPresenter {
 
   @override
   Stream get isLoadingStream => throw UnimplementedError();
+
+  @override
+  Stream get mainErrorStream => throw UnimplementedError();
 }
 
 class App extends StatelessWidget {

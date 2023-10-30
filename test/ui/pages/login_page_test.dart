@@ -14,6 +14,7 @@ void main() {
   StreamController<String> passwordErrorController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
+  StreamController<String> mainErrorController;
 
   Future<void> loadPage(WidgetTester tester) async {
     presenter = LoginPresenterSpy();
@@ -21,6 +22,7 @@ void main() {
     passwordErrorController = StreamController<String>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
+    mainErrorController = StreamController<String>();
 
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
@@ -30,6 +32,8 @@ void main() {
         .thenAnswer((_) => isFormValidController.stream);
     when(presenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
+    when(presenter.mainErrorStream)
+        .thenAnswer((_) => mainErrorController.stream);
 
     //sempre que houver alteração no stream, vai ser atualizado o valor
     //nessa versão mocada
@@ -48,6 +52,7 @@ void main() {
         passwordErrorController.close();
         isFormValidController.close();
         isLoadingController.close();
+        mainErrorController.close();
       },
     );
 
@@ -293,6 +298,17 @@ void main() {
         await tester.pump();
 
         expect(find.byType(CircularProgressIndicator), findsNothing);
+      },
+    );
+    testWidgets(
+      "Should present error message if authentication fails",
+      (WidgetTester tester) async {
+        await loadPage(tester);
+
+        mainErrorController.add("Erro para efetuar o login");
+        await tester.pump();
+
+        expect(find.text("Erro para efetuar o login"), findsOneWidget);
       },
     );
   });
