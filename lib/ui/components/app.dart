@@ -13,7 +13,7 @@ class LoginPresenterPersonal implements LoginPresenter {
       StreamController<bool>.broadcast();
 
   @override
-  Stream get isFormValidStream => isFormValidController.stream;
+  Stream<bool> get isFormValidStream => isFormValidController.stream;
 
   @override
   Stream<String> get emailErrorStream => emailErrorController.stream;
@@ -28,13 +28,13 @@ class LoginPresenterPersonal implements LoginPresenter {
   void validatePassword(String password) {}
 
   @override
-  void auth() {}
+  Future<void> auth() {}
 
   @override
-  Stream get isLoadingStream => throw UnimplementedError();
+  Stream<bool> get isLoadingStream => throw UnimplementedError();
 
   @override
-  Stream get mainErrorStream => throw UnimplementedError();
+  Stream<String> get mainErrorStream => throw UnimplementedError();
 
   @override
   void dispose() {}
