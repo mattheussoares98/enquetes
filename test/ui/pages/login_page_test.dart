@@ -245,5 +245,23 @@ void main() {
         expect(button.onPressed, isNotNull);
       },
     );
+    testWidgets(
+      "Should disable button if form is invalid",
+      (WidgetTester tester) async {
+        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
+        //UMA STREAM DO TIPO presenter.passwordErrorStream
+        await loadPage(tester);
+
+        isFormValidController.add(false);
+        //se o controller emitir qualquer texto, essa string vai do strem vai
+        //ser emitida e "cair" no formfield, exibindo a mensagem na tela
+
+        await tester.pump();
+        //força uma renderização da página
+
+        final button = tester.widget<RaisedButton>(find.byType(RaisedButton));
+        expect(button.onPressed, null);
+      },
+    );
   });
 }
