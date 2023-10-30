@@ -12,16 +12,20 @@ void main() {
   LoginPresenter presenter;
   StreamController<String> emailErrorController;
   StreamController<String> passwordErrorController;
+  StreamController<bool> isFormValidController;
 
   Future<void> loadPage(WidgetTester tester) async {
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController<String>();
     passwordErrorController = StreamController<String>();
+    isFormValidController = StreamController<bool>();
 
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
     when(presenter.passwordErrorStream)
         .thenAnswer((_) => passwordErrorController.stream);
+    when(presenter.isFormValidStream)
+        .thenAnswer((_) => isFormValidController.stream);
 
     //sempre que houver alteração no stream, vai ser atualizado o valor
     //nessa versão mocada
@@ -38,6 +42,7 @@ void main() {
       () {
         emailErrorController.close();
         passwordErrorController.close();
+        isFormValidController.close();
       },
     );
 
@@ -220,6 +225,24 @@ void main() {
           ),
           findsOneWidget,
         );
+      },
+    );
+    testWidgets(
+      "Should enable button if form is valid",
+      (WidgetTester tester) async {
+        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
+        //UMA STREAM DO TIPO presenter.passwordErrorStream
+        await loadPage(tester);
+
+        isFormValidController.add(true);
+        //se o controller emitir qualquer texto, essa string vai do strem vai
+        //ser emitida e "cair" no formfield, exibindo a mensagem na tela
+
+        await tester.pump();
+        //força uma renderização da página
+
+        final button = tester.widget<RaisedButton>(find.byType(RaisedButton));
+        expect(button.onPressed, isNotNull);
       },
     );
   });

@@ -9,6 +9,11 @@ class LoginPresenterPersonal implements LoginPresenter {
       StreamController<String>.broadcast();
   final StreamController<String> passwordErrorController =
       StreamController<String>.broadcast();
+  final StreamController<bool> isFormValidController =
+      StreamController<bool>.broadcast();
+
+  @override
+  Stream get isFormValidStream => isFormValidController.stream;
 
   @override
   Stream<String> get emailErrorStream => emailErrorController.stream;
