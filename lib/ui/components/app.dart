@@ -31,7 +31,6 @@ class LoginPresenterPersonal implements LoginPresenter {
   void auth() {}
 
   @override
-  // TODO: implement isLoadingStream
   Stream get isLoadingStream => throw UnimplementedError();
 }
 
