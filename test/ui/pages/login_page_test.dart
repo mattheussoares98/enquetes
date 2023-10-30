@@ -101,5 +101,52 @@ void main() {
         expect(find.text("any error"), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "Should present no error if email is valid",
+      (WidgetTester tester) async {
+        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
+        //UMA STREAM DO TIPO presenter.emailErrorStream
+        await loadPage(tester);
+
+        emailErrorController.add(null);
+        //se o controller emitir qualquer texto, essa string vai do strem vai
+        //ser emitida e "cair" no formfield, exibindo a mensagem na tela
+
+        await tester.pump();
+        //força uma renderização da página
+
+        expect(
+          find.descendant(
+            of: find.bySemanticsLabel('Email'),
+            matching: find.byType(Text),
+          ),
+          findsOneWidget,
+        );
+      },
+    );
+    testWidgets(
+      "Should present no error if email is valid",
+      (WidgetTester tester) async {
+        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
+        //UMA STREAM DO TIPO presenter.emailErrorStream
+        await loadPage(tester);
+
+        emailErrorController.add("");
+        //se o controller emitir qualquer texto, essa string vai do strem vai
+        //ser emitida e "cair" no formfield, exibindo a mensagem na tela
+
+        await tester.pump();
+        //força uma renderização da página
+
+        expect(
+          find.descendant(
+            of: find.bySemanticsLabel('Email'),
+            matching: find.byType(Text),
+          ),
+          findsOneWidget,
+        );
+      },
+    );
   });
 }

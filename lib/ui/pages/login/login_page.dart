@@ -30,7 +30,9 @@ class LoginPage extends StatelessWidget {
                             decoration: InputDecoration(
                               labelText: "Email",
                               icon: const Icon(Icons.email),
-                              errorText: snapshot.data,
+                              errorText: snapshot.data?.isEmpty == true
+                                  ? null
+                                  : snapshot.data,
                             ),
                             keyboardType: TextInputType.emailAddress,
                             onChanged: loginPresenter.validateEmail,
