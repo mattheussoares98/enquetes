@@ -28,7 +28,7 @@ class LoginPresenterPersonal implements LoginPresenter {
   void validatePassword(String password) {}
 
   @override
-  Future<void> auth() {}
+  Future<void> auth() async {}
 
   @override
   Stream<bool> get isLoadingStream => throw UnimplementedError();
