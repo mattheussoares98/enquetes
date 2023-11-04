@@ -22,13 +22,19 @@ class StreamLoginPresenter {
 }
 
 void main() {
+  StreamLoginPresenter sut;
+  ValidationSpy validation;
+  String email;
+
+  setUp(() {
+    sut = StreamLoginPresenter(validation: validation);
+    validation = ValidationSpy();
+    email = faker.internet.email();
+  });
+
   test(
     "Should call Validation with correct email",
     () {
-      final validation = ValidationSpy();
-      final sut = StreamLoginPresenter(validation: validation);
-      final email = faker.internet.email();
-
       sut.validateEmail(email);
 
       verify(
