@@ -72,4 +72,17 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    "Should emit password error if validation fails",
+    () {
+      mockValidation(value: "error");
+
+      sut.passwordErrorStream.listen((error) => expect(error, "error"));
+      sut.isFormValidStream.listen((isValid) => expect(isValid, false));
+
+      sut.validatePassword(password);
+      sut.validatePassword(password);
+    },
+  );
 }
