@@ -14,8 +14,10 @@ class StreamLoginPresenter {
   final _controller = StreamController<LoginState>.broadcast();
   var _state = LoginState();
 
-  Stream<String> get emailErrorStream =>
-      _controller.stream.map((state) => state.emailError);
+  Stream<String> get emailErrorStream => _controller.stream
+      .map((state) => state.emailError)
+      //só vai emitir um novo valor se for diferente do valor anterior
+      .distinct();
 
   void validateEmail(String email) {
     _state.emailError = validation.validate(field: "email", value: email);
