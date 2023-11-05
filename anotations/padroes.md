@@ -20,3 +20,6 @@
 
 ## GERAL
 1. Uma classe deve ter somente uma responsabilidade! Não deve ter mais de uma!
+
+## Presenter
+1. Responsável pelo gerenciamento de estado
