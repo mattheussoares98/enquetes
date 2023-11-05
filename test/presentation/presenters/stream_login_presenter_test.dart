@@ -85,4 +85,14 @@ void main() {
       sut.validatePassword(password);
     },
   );
+  test(
+    "Should emit password error if validation fails",
+    () {
+      sut.passwordErrorStream.listen((error) => expect(error, null));
+      sut.isFormValidStream.listen((isValid) => expect(isValid, false));
+
+      sut.validatePassword(password);
+      sut.validatePassword(password);
+    },
+  );
 }
