@@ -5,6 +5,7 @@ import '../protocols/validation.dart';
 
 class LoginState {
   String emailError;
+  bool get isFormValid => false;
 }
 
 class StreamLoginPresenter {
@@ -16,6 +17,11 @@ class StreamLoginPresenter {
 
   Stream<String> get emailErrorStream => _controller.stream
       .map((state) => state.emailError)
+      //só vai emitir um novo valor se for diferente do valor anterior
+      .distinct();
+
+  Stream<bool> get isFormValidStream => _controller.stream
+      .map((state) => state.isFormValid)
       //só vai emitir um novo valor se for diferente do valor anterior
       .distinct();
 
