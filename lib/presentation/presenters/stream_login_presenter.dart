@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
 
+import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
 import '../protocols/validation.dart';
 
@@ -9,6 +10,7 @@ class LoginState {
   String email;
   String passwordError;
   String password;
+  String mainError;
   bool get isFormValid =>
       emailError == null &&
       passwordError == null &&
@@ -48,6 +50,11 @@ class StreamLoginPresenter {
       //só vai emitir um novo valor se for diferente do valor anterior
       .distinct();
 
+  Stream<String> get mainErrorStream => _controller.stream
+      .map((state) => state.mainError)
+      //só vai emitir um novo valor se for diferente do valor anterior
+      .distinct();
+
   void _update() => _controller.add(_state);
 
   void validateEmail(String email) {
@@ -66,12 +73,17 @@ class StreamLoginPresenter {
   Future<void> auth() async {
     _state.isLoading = true;
     _update();
-    await authentication.auth(
-      AuthenticationParams(
-        email: _state.email,
-        password: _state.password,
-      ),
-    );
+
+    try {
+      await authentication.auth(
+        AuthenticationParams(
+          email: _state.email,
+          password: _state.password,
+        ),
+      );
+    } on DomainError catch (error) {
+      _state.mainError = error.description;
+    }
 
     _state.isLoading = false;
     _update();
