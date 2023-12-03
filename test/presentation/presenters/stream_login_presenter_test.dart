@@ -1,3 +1,4 @@
+import 'package:enquetes/domain/entities/account_entity.dart';
 import 'package:enquetes/domain/usecases/authentication.dart';
 import 'package:enquetes/presentation/presenters/presenters.dart';
 import 'package:faker/faker.dart';
@@ -24,6 +25,18 @@ void main() {
     mockValidationCall(field).thenReturn(value);
   }
 
+  PostExpectation mockAuthenticationCall() => when(
+        authentication.auth(any),
+      );
+
+  void mockAuthentication() {
+    mockAuthenticationCall().thenAnswer(
+      (realInvocation) async => AccountEntity(
+        faker.guid.guid(),
+      ),
+    );
+  }
+
   setUp(() {
     validation = ValidationSpy();
     authentication = AuthenticationSpy();
@@ -34,6 +47,7 @@ void main() {
     email = faker.internet.email();
     password = faker.internet.password();
     mockValidation();
+    mockAuthentication();
   });
 
   test('Should call Validation with correct email', () {
@@ -140,5 +154,13 @@ void main() {
         //está passando um objeto como parâmetro. Só está funcionando porque usou a dependência Equatable no AuthenticationParams
       ),
     ).called(1);
+  });
+  test('Should emit correct events on Authentication succes', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+
+    await sut.auth();
   });
 }
