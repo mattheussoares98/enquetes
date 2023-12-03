@@ -27,7 +27,7 @@ class StreamLoginPresenter {
     @required this.authentication,
   });
 
-  final _controller = StreamController<LoginState>.broadcast();
+  var _controller = StreamController<LoginState>.broadcast();
   var _state = LoginState();
 
   Stream<String> get emailErrorStream => _controller.stream
@@ -55,7 +55,7 @@ class StreamLoginPresenter {
       //só vai emitir um novo valor se for diferente do valor anterior
       .distinct();
 
-  void _update() => _controller.add(_state);
+  void _update() => _controller?.add(_state);
 
   void validateEmail(String email) {
     _state.email = email;
@@ -87,5 +87,10 @@ class StreamLoginPresenter {
 
     _state.isLoading = false;
     _update();
+  }
+
+  void dispose() {
+    _controller.close();
+    _controller = null;
   }
 }
