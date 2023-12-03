@@ -1,20 +1,6 @@
-import 'package:enquetes/validation/protocols/protocols.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class EmailValidation implements FieldValidation {
-  final String field;
-
-  EmailValidation(this.field);
-
-  String validate(String value) {
-    final RegExp regex =
-        RegExp(r'^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
-
-    bool isValid = value?.isNotEmpty != true || regex.hasMatch(value);
-
-    return isValid ? null : "Campo inválido";
-  }
-}
+import 'package:enquetes/validation/validators/validators.dart';
 
 main() {
   EmailValidation sut;
