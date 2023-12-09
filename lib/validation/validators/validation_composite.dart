@@ -8,7 +8,7 @@ class ValidationComposite implements Validation {
 
   @override
   String? validate({
-    required String field,
+    String? field,
     required String value,
   }) {
     String? error;
