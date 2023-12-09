@@ -3,15 +3,14 @@ import '../http/http.dart';
 import '../../domain/helpers/helpers.dart';
 import '../../domain/entities/entities.dart';
 import '../../data/models/models.dart';
-import 'package:meta/meta.dart';
 
 class RemoteAuthentication implements Authentication {
   final HttpClient httpClient;
   final String url;
 
   RemoteAuthentication({
-    @required this.httpClient,
-    @required this.url,
+    required this.httpClient,
+    required this.url,
   });
 
   @override
@@ -30,26 +29,23 @@ class RemoteAuthentication implements Authentication {
       AccountEntity accountEntity =
           RemoteAccountModel.fromJson(httpResponse).toEntity();
 
-      if (accountEntity != null) {
-        return accountEntity;
-      }
+      return accountEntity;
     } on HttpError catch (error) {
       throw error == HttpError.unauthorized
           ? DomainError.invalidCredentials
           : DomainError.unexpected;
     }
-    return null;
   }
 }
 
 class RemoteAuthenticationParams {
   final String email;
   final String password;
-  final Map body;
+  Map? body;
 
   RemoteAuthenticationParams({
-    @required this.email,
-    @required this.password,
+    required this.email,
+    required this.password,
     this.body,
   });
 

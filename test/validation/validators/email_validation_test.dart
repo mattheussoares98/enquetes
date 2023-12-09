@@ -3,23 +3,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:enquetes/validation/validators/validators.dart';
 
 main() {
-  EmailValidation sut;
+  EmailValidation? sut;
   setUp(() {
     sut = EmailValidation("any_field");
   });
   test("Should return null if email is empty", () {
-    expect(sut.validate(""), null);
+    expect(sut!.validate(""), null);
   });
 
   test("Should return null if email is null", () {
-    expect(sut.validate(null), null);
+    expect(sut!.validate(null), null);
   });
 
   test("Should return null if email is valid", () {
-    expect(sut.validate("mattheussbarbosa@hotmail.com"), null);
+    expect(sut!.validate("mattheussbarbosa@hotmail.com"), null);
   });
 
   test("Should return null if email is invalid", () {
-    expect(sut.validate("mattheussbarbosa"), "Campo inválido");
+    expect(sut!.validate("mattheussbarbosa"), "Campo inválido");
   });
 }

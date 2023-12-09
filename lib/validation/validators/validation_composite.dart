@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import '../../presentation/protocols/protocols.dart';
 import '../../validation/protocols/protocols.dart';
 
@@ -8,11 +6,12 @@ class ValidationComposite implements Validation {
 
   ValidationComposite(this.validations);
 
-  String validate({
-    @required String field,
-    @required String value,
+  @override
+  String? validate({
+    required String field,
+    required String value,
   }) {
-    String error;
+    String? error;
     for (var validation in validations.where(
       (element) => element.field == field,
     )) {

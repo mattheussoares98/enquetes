@@ -1,20 +1,20 @@
 import "dart:async";
 import 'package:faker/faker.dart';
-import 'package:mockito/mockito.dart';
 import "package:flutter/material.dart";
 
 import "package:enquetes/ui/pages/pages.dart";
 import "package:flutter_test/flutter_test.dart";
+import "package:mocktail/mocktail.dart";
 
 class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 void main() {
-  LoginPresenter presenter;
-  StreamController<String> emailErrorController;
-  StreamController<String> passwordErrorController;
-  StreamController<bool> isFormValidController;
-  StreamController<bool> isLoadingController;
-  StreamController<String> mainErrorController;
+  LoginPresenter? presenter;
+  StreamController<String?>? emailErrorController;
+  StreamController<String?>? passwordErrorController;
+  StreamController<bool?>? isFormValidController;
+  StreamController<bool?>? isLoadingController;
+  StreamController<String?>? mainErrorController;
 
   void initStreams() {
     presenter = LoginPresenterSpy();
@@ -26,24 +26,24 @@ void main() {
   }
 
   void mockStreams() {
-    when(presenter.emailErrorStream)
-        .thenAnswer((_) => emailErrorController.stream);
-    when(presenter.passwordErrorStream)
-        .thenAnswer((_) => passwordErrorController.stream);
-    when(presenter.isFormValidStream)
-        .thenAnswer((_) => isFormValidController.stream);
-    when(presenter.isLoadingStream)
-        .thenAnswer((_) => isLoadingController.stream);
-    when(presenter.mainErrorStream)
-        .thenAnswer((_) => mainErrorController.stream);
+    when(() => presenter!.emailErrorStream)
+        .thenAnswer((_) => emailErrorController!.stream);
+    when(() => presenter!.passwordErrorStream)
+        .thenAnswer((_) => passwordErrorController!.stream);
+    when(() => presenter!.isFormValidStream)
+        .thenAnswer((_) => isFormValidController!.stream);
+    when(() => presenter!.isLoadingStream)
+        .thenAnswer((_) => isLoadingController!.stream);
+    when(() => presenter!.mainErrorStream)
+        .thenAnswer((_) => mainErrorController!.stream);
   }
 
   void closeStreams() {
-    emailErrorController.close();
-    passwordErrorController.close();
-    isFormValidController.close();
-    isLoadingController.close();
-    mainErrorController.close();
+    emailErrorController!.close();
+    passwordErrorController!.close();
+    isFormValidController!.close();
+    isLoadingController!.close();
+    mainErrorController!.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -52,7 +52,7 @@ void main() {
 
     final loginPage = MaterialApp(
         home: LoginPage(
-      loginPresenter: presenter,
+      presenter!,
     ));
     await tester.pumpWidget(loginPage);
   }
@@ -86,9 +86,10 @@ void main() {
           findsOneWidget,
         );
 
-        //procurando um widget do tipo RaisedButton para testar o onPressed
+        //procurando um widget do tipo ElevatedButton para testar o onPressed
         //dele
-        final button = tester.widget<RaisedButton>(find.byType(RaisedButton));
+        final button =
+            tester.widget<ElevatedButton>(find.byType(ElevatedButton));
         expect(button.onPressed, null);
         expect(find.byType(CircularProgressIndicator), findsNothing);
       },
@@ -102,7 +103,7 @@ void main() {
         final email = faker.internet.email();
         await tester.enterText(find.bySemanticsLabel("Email"), email);
 
-        verify(presenter.validateEmail(email));
+        verify(() => presenter!.validateEmail(email));
 
         final password = faker.internet.email();
         await tester.enterText(
@@ -113,7 +114,7 @@ void main() {
             ),
             password);
 
-        verify(presenter.validatePassword(password));
+        verify(() => presenter!.validatePassword(password));
       },
     );
 
@@ -121,10 +122,10 @@ void main() {
       "Should present error if email is invalid",
       (WidgetTester tester) async {
         //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
-        //UMA STREAM DO TIPO presenter.emailErrorStream
+        //UMA STREAM DO TIPO presenter!.emailErrorStream
         await loadPage(tester);
 
-        emailErrorController.add("any error");
+        emailErrorController!.add("any error");
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
@@ -139,10 +140,10 @@ void main() {
       "Should present no error if email is valid",
       (WidgetTester tester) async {
         //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
-        //UMA STREAM DO TIPO presenter.emailErrorStream
+        //UMA STREAM DO TIPO presenter!.emailErrorStream
         await loadPage(tester);
 
-        emailErrorController.add(null);
+        emailErrorController!.add(null);
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
@@ -162,10 +163,10 @@ void main() {
       "Should present no error if email is valid",
       (WidgetTester tester) async {
         //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
-        //UMA STREAM DO TIPO presenter.emailErrorStream
+        //UMA STREAM DO TIPO presenter!.emailErrorStream
         await loadPage(tester);
 
-        emailErrorController.add("");
+        emailErrorController!.add("");
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
@@ -186,10 +187,10 @@ void main() {
       "Should present error if password is invalid",
       (WidgetTester tester) async {
         //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
-        //UMA STREAM DO TIPO presenter.emailErrorStream
+        //UMA STREAM DO TIPO presenter!.emailErrorStream
         await loadPage(tester);
 
-        passwordErrorController.add("any error");
+        passwordErrorController!.add("any error");
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
@@ -204,10 +205,10 @@ void main() {
       "Should present no error if password is valid",
       (WidgetTester tester) async {
         //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
-        //UMA STREAM DO TIPO presenter.passwordErrorStream
+        //UMA STREAM DO TIPO presenter!.passwordErrorStream
         await loadPage(tester);
 
-        passwordErrorController.add(null);
+        passwordErrorController!.add(null);
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
@@ -227,10 +228,10 @@ void main() {
       "Should present no error if password is valid",
       (WidgetTester tester) async {
         //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
-        //UMA STREAM DO TIPO presenter.passwordErrorStream
+        //UMA STREAM DO TIPO presenter!.passwordErrorStream
         await loadPage(tester);
 
-        passwordErrorController.add("");
+        passwordErrorController!.add("");
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
@@ -250,17 +251,18 @@ void main() {
       "Should enable button if form is valid",
       (WidgetTester tester) async {
         //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
-        //UMA STREAM DO TIPO presenter.passwordErrorStream
+        //UMA STREAM DO TIPO presenter!.passwordErrorStream
         await loadPage(tester);
 
-        isFormValidController.add(true);
+        isFormValidController!.add(true);
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
         await tester.pump();
         //força uma renderização da página
 
-        final button = tester.widget<RaisedButton>(find.byType(RaisedButton));
+        final button =
+            tester.widget<ElevatedButton>(find.byType(ElevatedButton));
         expect(button.onPressed, isNotNull);
       },
     );
@@ -268,17 +270,18 @@ void main() {
       "Should disable button if form is invalid",
       (WidgetTester tester) async {
         //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
-        //UMA STREAM DO TIPO presenter.passwordErrorStream
+        //UMA STREAM DO TIPO presenter!.passwordErrorStream
         await loadPage(tester);
 
-        isFormValidController.add(false);
+        isFormValidController!.add(false);
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
         await tester.pump();
         //força uma renderização da página
 
-        final button = tester.widget<RaisedButton>(find.byType(RaisedButton));
+        final button =
+            tester.widget<ElevatedButton>(find.byType(ElevatedButton));
         expect(button.onPressed, null);
       },
     );
@@ -288,7 +291,7 @@ void main() {
       (WidgetTester tester) async {
         await loadPage(tester);
 
-        isLoadingController.add(true);
+        isLoadingController!.add(true);
 
         await tester.pump();
 
@@ -300,9 +303,9 @@ void main() {
       (WidgetTester tester) async {
         await loadPage(tester);
 
-        isLoadingController.add(true);
+        isLoadingController!.add(true);
         await tester.pump();
-        isLoadingController.add(false);
+        isLoadingController!.add(false);
         await tester.pump();
 
         expect(find.byType(CircularProgressIndicator), findsNothing);
@@ -313,7 +316,7 @@ void main() {
       (WidgetTester tester) async {
         await loadPage(tester);
 
-        mainErrorController.add("Erro para efetuar o login");
+        mainErrorController!.add("Erro para efetuar o login");
         await tester.pump();
 
         expect(find.text("Erro para efetuar o login"), findsOneWidget);
@@ -327,7 +330,7 @@ void main() {
         addTearDown(() {
           //chama quando o widget que está sendo usado no teste é encerrado.
           //Então aqui é ctz que o LoginPage está sendo encerrado
-          verify(presenter.dispose()).called(1);
+          verify(() => presenter!.dispose()).called(1);
         });
       },
     );

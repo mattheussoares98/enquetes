@@ -12,12 +12,11 @@
             "request": "launch",
             "program": "bin/main.dart"
         },
-
-    {
-        "name": "Dart: Run all Tests",
-        "type": "dart",
-        "request": "launch",
-        "program": "./test/"
-    }
+        {
+            "name": "Dart: Run all Tests",
+            "type": "dart",
+            "request": "launch",
+            "program": "./test/"
+        }
     ]
 }

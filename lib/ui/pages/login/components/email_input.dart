@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../../pages.dart';
 
 class EmailInput extends StatelessWidget {
+  const EmailInput({super.key});
+
   @override
   Widget build(BuildContext context) {
     LoginPresenter presenter = Provider.of(context);
