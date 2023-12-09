@@ -6,7 +6,7 @@ import '../../data/http/http.dart';
 class HttpAdapter implements HttpClient {
   final Client client;
 
-  HttpAdapter({required this.client});
+  HttpAdapter(this.client);
 
   @override
   Future<Map> request({

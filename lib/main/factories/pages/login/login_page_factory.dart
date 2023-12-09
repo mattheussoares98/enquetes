@@ -10,7 +10,7 @@ import 'package:http/http.dart';
 LoginPage makeLoginPage() {
   const url = "http://fordevs.herokuapp.com/api/login";
   final client = Client();
-  final httpAdapter = HttpAdapter(client: client);
+  final httpAdapter = HttpAdapter(client);
   final remoteAuthentication = RemoteAuthentication(
     httpClient: httpAdapter,
     url: url,
