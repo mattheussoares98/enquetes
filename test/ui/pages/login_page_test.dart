@@ -139,11 +139,14 @@ void main() {
     testWidgets(
       "Should present no error if email is valid",
       (WidgetTester tester) async {
-        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
-        //UMA STREAM DO TIPO presenter!.emailErrorStream
         await loadPage(tester);
 
-        emailErrorController!.add(null);
+        //PRA FUNCIONAR ESSE TESTE ABAIXO, PRECISOU ENVOLVER O TEXTFORMFIELD COM
+        //UMA STREAM DO TIPO presenter!.emailErrorStream
+        when(() => presenter!.emailErrorStream)
+            .thenAnswer((_) => emailErrorController!.stream);
+
+        emailErrorController!.add("");
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
@@ -208,7 +211,10 @@ void main() {
         //UMA STREAM DO TIPO presenter!.passwordErrorStream
         await loadPage(tester);
 
-        passwordErrorController!.add(null);
+        when(() => presenter!.passwordErrorStream)
+            .thenAnswer((_) => passwordErrorController!.stream);
+
+        passwordErrorController!.add("");
         //se o controller emitir qualquer texto, essa string vai do strem vai
         //ser emitida e "cair" no formfield, exibindo a mensagem na tela
 
