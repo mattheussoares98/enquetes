@@ -5,7 +5,7 @@ import 'package:enquetes/validation/validators/validators.dart';
 void main() {
   RequiredFieldValidation? sut;
   setUp(() {
-    sut = RequiredFieldValidation("any_field");
+    sut = const RequiredFieldValidation("any_field");
   });
 
   test("Should return null if value is not empty", () {

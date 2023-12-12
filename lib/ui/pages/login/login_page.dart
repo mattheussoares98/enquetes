@@ -38,34 +38,39 @@ class _LoginPageState extends State<LoginPage> {
           }
         });
 
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              const LoginHeader(),
-              const SizedBox(height: 30),
-              const HeadLine1(text: "Login"),
-              Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Provider(
-                  create: (_) => widget.loginPresenter,
-                  child: Form(
-                    child: Column(
-                      children: [
-                        const EmailInput(),
-                        const SizedBox(height: 10),
-                        const PasswordInput(),
-                        const SizedBox(height: 30),
-                        const LoginButton(),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.person),
-                        ),
-                      ],
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const LoginHeader(),
+                const SizedBox(height: 30),
+                const HeadLine1(text: "Login"),
+                Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Provider(
+                    create: (_) => widget.loginPresenter,
+                    child: Form(
+                      child: Column(
+                        children: [
+                          const EmailInput(),
+                          const SizedBox(height: 10),
+                          const PasswordInput(),
+                          const SizedBox(height: 30),
+                          const LoginButton(),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.person),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       }),
