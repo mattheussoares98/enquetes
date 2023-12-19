@@ -1,3 +1,1 @@
-String makeApiUrl(String path) {
-  return "http://fordevs.herokuapp.com/api/$path";
-}
+String makeApiUrl(String path) => 'http://fordevs.herokuapp.com/api/$path';

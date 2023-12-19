@@ -1,9 +1,10 @@
 import '../../../data/usecases/usecases.dart';
+import '../../../domain/usecases/usecases.dart';
 import '../factories.dart';
 
-RemoteAuthentication makeRemoteAuthentication() {
+Authentication makeRemoteAuthentication() {
   return RemoteAuthentication(
     httpClient: makeHttpAdapter(),
-    url: makeApiUrl("login"),
+    url: makeApiUrl('login')
   );
 }

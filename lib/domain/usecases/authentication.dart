@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
-import '../entities/account_entity.dart';
+import '../entities/entities.dart';
 
 abstract class Authentication {
   Future<AccountEntity> auth(AuthenticationParams params);
@@ -8,16 +9,13 @@ abstract class Authentication {
 
 class AuthenticationParams extends Equatable {
   final String email;
-  final String password;
-  final Map? body;
+  final String secret;
 
   @override
-  List get props => [email, password];
-  //usou o Equatable e o props para conseguir comparar objetos no teste de authentication. Sem isso, não daria certo
+  List get props => [email, secret];
 
-  const AuthenticationParams({
-    required this.email,
-    required this.password,
-    this.body,
+  AuthenticationParams({
+    @required this.email,
+    @required this.secret
   });
 }

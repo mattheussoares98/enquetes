@@ -2,29 +2,25 @@ import '../../validation/protocols/protocols.dart';
 import '../../validation/validators/validators.dart';
 
 class ValidationBuilder {
-  static late ValidationBuilder _instance;
-  late String _fieldName;
-  final List<FieldValidation> _validations = [];
-
-  ValidationBuilder._();
+  static ValidationBuilder _instance;
+  String fieldName;
+  List<FieldValidation> validations = [];
 
   static ValidationBuilder field(String fieldName) {
-    //sempre vão precisar usar esse método primeiro pra conseguir utilizar os
-    //outros
-    _instance = ValidationBuilder._();
-    _instance._fieldName = fieldName;
+    _instance = ValidationBuilder();
+    _instance.fieldName = fieldName;
     return _instance;
   }
 
   ValidationBuilder required() {
-    _validations.add(RequiredFieldValidation(_fieldName));
+    validations.add(RequiredFieldValidation(fieldName));
     return this;
   }
 
   ValidationBuilder email() {
-    _validations.add(EmailValidation(_fieldName));
+    validations.add(EmailValidation(fieldName));
     return this;
   }
 
-  List<FieldValidation> build() => _validations;
+  List<FieldValidation> build() => validations;
 }

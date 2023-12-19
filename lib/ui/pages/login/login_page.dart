@@ -1,79 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../pages.dart';
 import '../../components/components.dart';
 import 'components/components.dart';
+import 'login_presenter.dart';
 
 class LoginPage extends StatefulWidget {
-  final LoginPresenter loginPresenter;
-  const LoginPage(this.loginPresenter, {super.key});
+  final LoginPresenter presenter;
+
+  LoginPage(this.presenter);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  void _hideKeyboard() {
+    final currectFocus = FocusScope.of(context);
+    if (!currectFocus.hasPrimaryFocus) {
+      currectFocus.unfocus();
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
-    widget.loginPresenter.dispose();
+    widget.presenter.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(builder: (context) {
-        widget.loginPresenter.isLoadingStream?.listen((isLoading) {
-          if (isLoading == true) {
-            showLoading(context);
-          } else {
-            hideLoading(context);
-          }
-        });
+      body: Builder(
+        builder: (context) {
+          widget.presenter.isLoadingStream.listen((isLoading) {
+            if (isLoading) {
+              showLoading(context);
+            } else {
+              hideLoading(context);
+            }
+          });
 
-        widget.loginPresenter.mainErrorStream?.listen((error) {
-          if (error != null) {
-            showErrorMessage(context: context, error: error);
-          }
-        });
+          widget.presenter.mainErrorStream.listen((error) {
+            if (error != null) {
+              showErrorMessage(context, error);
+            }
+          });
 
-        return GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const LoginHeader(),
-                const SizedBox(height: 30),
-                const HeadLine1(text: "Login"),
-                Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Provider(
-                    create: (_) => widget.loginPresenter,
-                    child: Form(
-                      child: Column(
-                        children: [
-                          const EmailInput(),
-                          const SizedBox(height: 10),
-                          const PasswordInput(),
-                          const SizedBox(height: 30),
-                          const LoginButton(),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.person),
-                          ),
-                        ],
+          return GestureDetector(
+            onTap: _hideKeyboard,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  LoginHeader(),
+                  Headline1(text: 'Login'),
+                  Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Provider(
+                      create: (_) => widget.presenter,
+                      child: Form(
+                        child: Column(
+                          children: <Widget>[
+                            EmailInput(),
+                            Padding(
+                              padding: EdgeInsets.only(top: 8, bottom: 32),
+                              child: PasswordInput(),
+                            ),
+                            LoginButton(),
+                            FlatButton.icon(
+                              onPressed: () {},
+                              icon: Icon(Icons.person),
+                              label: Text('Criar Conta')
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }

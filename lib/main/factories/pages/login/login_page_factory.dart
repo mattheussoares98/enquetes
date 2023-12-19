@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
+
 import '../../../../ui/pages/pages.dart';
 import '../../factories.dart';
 
-LoginPage makeLoginPage() {
+Widget makeLoginPage() {
   return LoginPage(makeGetxLoginPresenter());
 }
