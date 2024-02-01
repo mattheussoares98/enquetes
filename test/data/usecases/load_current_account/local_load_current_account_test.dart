@@ -1,10 +1,11 @@
+import 'package:enquetes/domain/entities/account_entity.dart';
 import "package:meta/meta.dart";
 import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 abstract class FetchSecureCacheStorage {
-  Future<void> fetchSecure(String key);
+  Future<String> fetchSecure(String key);
 }
 
 class FetchSecueCacheStorageSpy extends Mock
@@ -15,8 +16,9 @@ class LocalLoadCurrentAccount {
 
   LocalLoadCurrentAccount({@required this.fetchSecureCacheStorage});
 
-  Future<void> load() async {
-    await fetchSecureCacheStorage.fetchSecure("token");
+  Future<AccountEntity> load() async {
+    final token = await fetchSecureCacheStorage.fetchSecure("token");
+    return AccountEntity(token);
   }
 }
 
@@ -37,5 +39,14 @@ main() {
     await sut.load();
 
     verify(fetchSecureCacheStorage.fetchSecure("token"));
+  });
+
+  test("Should return an AccountEntity", () async {
+    when(fetchSecureCacheStorage.fetchSecure(any))
+        .thenAnswer((_) async => token);
+
+    final future = await sut.load();
+
+    expect(future, AccountEntity(token));
   });
 }
