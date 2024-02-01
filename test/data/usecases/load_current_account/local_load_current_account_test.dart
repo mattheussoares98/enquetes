@@ -1,4 +1,5 @@
 import 'package:enquetes/domain/entities/account_entity.dart';
+import 'package:enquetes/domain/helpers/helpers.dart';
 import "package:meta/meta.dart";
 import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
@@ -17,8 +18,12 @@ class LocalLoadCurrentAccount {
   LocalLoadCurrentAccount({@required this.fetchSecureCacheStorage});
 
   Future<AccountEntity> load() async {
-    final token = await fetchSecureCacheStorage.fetchSecure("token");
-    return AccountEntity(token);
+    try {
+      final token = await fetchSecureCacheStorage.fetchSecure("token");
+      return AccountEntity(token);
+    } catch (error) {
+      throw DomainError.unexpected;
+    }
   }
 }
 
@@ -27,12 +32,25 @@ main() {
   String token;
   FetchSecueCacheStorageSpy fetchSecureCacheStorage;
 
+  PostExpectation mockFetchSecure() {
+    return when(fetchSecureCacheStorage.fetchSecure(any));
+  }
+
+  void mockFetchSecureCall() async {
+    mockFetchSecure().thenAnswer((_) async => token);
+  }
+
+  void mockFetchSecureError() {
+    mockFetchSecure().thenThrow(Exception());
+  }
+
   setUp(() {
     fetchSecureCacheStorage = FetchSecueCacheStorageSpy();
     sut = LocalLoadCurrentAccount(
       fetchSecureCacheStorage: fetchSecureCacheStorage,
     );
     token = faker.guid.guid();
+    mockFetchSecureCall();
   });
 
   test("Should call FetchSecureCacheStorage with correct value", () async {
@@ -42,11 +60,16 @@ main() {
   });
 
   test("Should return an AccountEntity", () async {
-    when(fetchSecureCacheStorage.fetchSecure(any))
-        .thenAnswer((_) async => token);
-
     final future = await sut.load();
 
     expect(future, AccountEntity(token));
+  });
+
+  test("Should return error on fetchSecureCacheStorage fails", () async {
+    mockFetchSecureError();
+
+    final future = sut.load();
+
+    expect(future, throwsA(DomainError.unexpected));
   });
 }
