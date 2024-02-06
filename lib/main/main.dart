@@ -18,8 +18,9 @@ class App extends StatelessWidget {
       title: '4Dev',
       debugShowCheckedModeBanner: false,
       theme: makeAppTheme(),
-      initialRoute: '/login',
+      initialRoute: '/',
       getPages: [
+        GetPage(name: '/', page: makeSplashPage),
         GetPage(name: '/login', page: makeLoginPage),
         GetPage(name: '/surveys', page: () => Scaffold(body: Text("Enquetes"))),
       ],
