@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../components/components.dart';
 import 'components/components.dart';
 import 'login_presenter.dart';
-import 'package:enquetes/utils/i18n/i18n.dart';
 import '../../helpers/helpers.dart';
 
 class LoginPage extends StatelessWidget {
@@ -52,7 +51,7 @@ class LoginPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   LoginHeader(),
-                  Headline1(text: 'Login'),
+                  Headline1(text: R.strings.login),
                   Padding(
                     padding: EdgeInsets.all(32),
                     child: Provider(
