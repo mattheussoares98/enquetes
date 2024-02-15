@@ -6,6 +6,7 @@ import '../../components/components.dart';
 import 'components/components.dart';
 import 'login_presenter.dart';
 import 'package:enquetes/utils/i18n/i18n.dart';
+import '../../helpers/helpers.dart';
 
 class LoginPage extends StatelessWidget {
   final LoginPresenter presenter;
@@ -32,9 +33,9 @@ class LoginPage extends StatelessWidget {
             }
           });
 
-          presenter.mainErrorStream.listen((error) {
+          presenter.mainErrorStream.listen((UIError error) {
             if (error != null) {
-              showErrorMessage(context, error);
+              showErrorMessage(context, error.description);
             }
           });
 
