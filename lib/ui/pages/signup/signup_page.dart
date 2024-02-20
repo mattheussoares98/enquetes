@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/components.dart';
+import 'components/components.dart';
+import 'signup_presenter.dart';
 import '../../helpers/helpers.dart';
-import '../../pages/login/login.dart';
-import '../../pages/signup/components/signup_button.dart';
 
-class LoginPage extends StatelessWidget {
-  final LoginPresenter presenter;
+class SignUpPage extends StatelessWidget {
+  final SignUpPresenter presenter;
 
-  LoginPage(this.presenter);
+  SignUpPage(this.presenter);
 
   @override
   Widget build(BuildContext context) {
@@ -60,12 +60,17 @@ class LoginPage extends StatelessWidget {
                         child: Column(
                           children: <Widget>[
                             EmailInput(),
+                            NameInput(),
                             Padding(
                               padding: EdgeInsets.only(top: 8, bottom: 32),
                               child: PasswordInput(),
                             ),
-                            LoginButton(),
+                            PasswordConfirmationInput(),
                             SignUpButton(),
+                            FlatButton.icon(
+                                onPressed: () {},
+                                icon: Icon(Icons.exit_to_app),
+                                label: Text(R.strings.login))
                           ],
                         ),
                       ),

@@ -9,6 +9,9 @@ class PtBr implements Translations {
 
   String get addAccount => "Criar conta";
   String get email => "Email";
-  String get password => "Senha";
   String get login => "Entrar";
+  String get name => "Nome";
+  String get password => "Senha";
+  String get passwordConfirmation => "Confirmar senha";
+  String get signUp => "Cadastrar";
 }

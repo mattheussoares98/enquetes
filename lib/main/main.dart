@@ -22,6 +22,7 @@ class App extends StatelessWidget {
       getPages: [
         GetPage(name: '/', page: makeSplashPage),
         GetPage(name: '/login', page: makeLoginPage),
+        GetPage(name: '/signup', page: makeSignUpPage),
         GetPage(name: '/surveys', page: () => Scaffold(body: Text("Enquetes"))),
       ],
     );
