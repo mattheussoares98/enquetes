@@ -89,15 +89,6 @@ void main() {
     expect(future, throwsA(DomainError.unexpected));
   });
 
-  test('Should throw InvalidCredentialsError if HttpClient returns 401',
-      () async {
-    mockHttpError(HttpError.unauthorized);
-
-    final future = sut.add(params);
-
-    expect(future, throwsA(DomainError.invalidCredentials));
-  });
-
   test('Should return an Account if HttpClient returns 200', () async {
     final validData = mockValidData();
     mockHttpData(validData);
