@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
 import '../../pages/login/login.dart';
-import '../../pages/signup/components/signup_button.dart';
 
 class LoginPage extends StatelessWidget {
   final LoginPresenter presenter;
@@ -65,7 +64,10 @@ class LoginPage extends StatelessWidget {
                               child: PasswordInput(),
                             ),
                             LoginButton(),
-                            SignUpButton(),
+                            FlatButton.icon(
+                                onPressed: () {},
+                                icon: Icon(Icons.person),
+                                label: Text(R.strings.addAccount))
                           ],
                         ),
                       ),

@@ -11,11 +11,11 @@ class SignUpButton extends StatelessWidget {
     return StreamBuilder<bool>(
       stream: presenter.isFormValidStream,
       builder: (context, snapshot) {
-        return FlatButton.icon(
-            onPressed: snapshot.data == true ? presenter.signUp : null,
-            icon: Icon(Icons.person),
-            label: Text(R.strings.signUp.toUpperCase()));
-      },
+        return RaisedButton(
+          onPressed: snapshot.data == true ? presenter.signUp : null,
+          child: Text(R.strings.signUp.toUpperCase()),
+        );
+      }
     );
   }
 }

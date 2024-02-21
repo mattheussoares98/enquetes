@@ -12,11 +12,13 @@ import '../protocols/protocols.dart';
 
 class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
   final Validation validation;
-  final Authentication authentication;
+  final AddAccount addAccount;
   final SaveCurrentAccount saveCurrentAccount;
 
   String _email;
   String _password;
+  String _name;
+  String _passwordConfirmation;
   var _emailError = Rx<UIError>();
   var _nameError = Rx<UIError>();
   var _passwordConfirmationError = Rx<UIError>();
@@ -38,7 +40,7 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
 
   GetxSignUpPresenter({
     @required this.validation,
-    @required this.authentication,
+    @required this.addAccount,
     @required this.saveCurrentAccount,
   });
 
@@ -51,6 +53,23 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
   void validatePassword(String password) {
     _password = password;
     _passwordError.value = _validateField(field: 'password', value: password);
+    _validateForm();
+  }
+
+  @override
+  void validateName(String name) {
+    _name = name;
+    _nameError.value = _validateField(field: 'name', value: name);
+    _validateForm();
+  }
+
+  @override
+  void validatePasswordConfirmation(String passwordConfirmation) {
+    _passwordConfirmation = passwordConfirmation;
+    _passwordConfirmationError.value = _validateField(
+      field: 'passwordConfirmation',
+      value: passwordConfirmation,
+    );
     _validateForm();
   }
 
@@ -76,6 +95,8 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
   void _validateForm() {
     _isFormValid.value = _emailError.value == null &&
         _passwordError.value == null &&
+        _nameError == null &&
+        _passwordConfirmationError == null &&
         _email != null &&
         _password != null;
   }
@@ -83,8 +104,13 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
   Future<void> signUp() async {
     try {
       _isLoading.value = true;
-      AccountEntity account = await authentication.auth(
-        AuthenticationParams(email: _email, secret: _password),
+      AccountEntity account = await addAccount.add(
+        AddAccountParams(
+          email: _email,
+          name: _name,
+          password: _password,
+          passwordConfirmation: _passwordConfirmation,
+        ),
       );
 
       await saveCurrentAccount.save(account);

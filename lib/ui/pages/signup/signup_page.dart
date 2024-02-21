@@ -50,8 +50,8 @@ class SignUpPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  LoginHeader(),
-                  Headline1(text: R.strings.login),
+                  // LoginHeader(),
+                  Headline1(text: R.strings.signUp),
                   Padding(
                     padding: EdgeInsets.all(32),
                     child: Provider(
