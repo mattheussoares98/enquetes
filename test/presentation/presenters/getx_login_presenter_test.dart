@@ -210,8 +210,8 @@ void main() {
     sut.validatePassword(password);
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-    sut.mainErrorStream.listen(expectAsync1((error) =>
-        expect(error, UIError.unexpected)));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
 
     await sut.auth();
   });
@@ -219,8 +219,8 @@ void main() {
     mockSaveCurrentAccountError();
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-    sut.mainErrorStream.listen(expectAsync1((error) =>
-        expect(error, UIError.unexpected)));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
 
     await sut.auth();
   });
@@ -232,5 +232,11 @@ void main() {
         .listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.auth();
+  });
+  test('Should go to SignUpPage on click', () async {
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, '/signup')));
+
+    sut.goToSignUpPage();
   });
 }
