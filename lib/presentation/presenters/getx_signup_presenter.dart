@@ -73,6 +73,11 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
     _validateForm();
   }
 
+  @override
+  void goToLoginPage() {
+    _navigateTo.value = "/login";
+  }
+
   UIError _validateField({@required String field, @required String value}) {
     ValidationError validationError = validation.validate(
       field: field,

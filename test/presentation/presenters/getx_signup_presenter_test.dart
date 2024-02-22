@@ -1,6 +1,6 @@
 import 'package:faker/faker.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:test/test.dart';
 
 import 'package:enquetes/domain/entities/entities.dart';
 import 'package:enquetes/domain/helpers/helpers.dart';
