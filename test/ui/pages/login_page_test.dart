@@ -233,7 +233,8 @@ void main() {
     mainErrorController.add(UIError.unexpected);
     await tester.pump();
 
-    expect(find.text("Algo errado aconteceu. Tente novamente em breve."), findsOneWidget);
+    expect(find.text("Algo errado aconteceu. Tente novamente em breve."),
+        findsOneWidget);
   });
   testWidgets('Should change page', (WidgetTester tester) async {
     await loadPage(tester);
@@ -259,4 +260,15 @@ void main() {
       expect(Get.currentRoute, "/login");
     },
   );
+
+  testWidgets("Should change to SignUpPage", (WidgetTester tester) async {
+    await loadPage(tester);
+
+    final button = find.bySemanticsLabel(R.strings.signUp);
+    await tester.ensureVisible(button);
+    await tester.tap(button);
+    await tester.pump();
+
+    verify(presenter.goToSignUpPage()).called(1);
+  });
 }

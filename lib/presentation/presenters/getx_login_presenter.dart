@@ -58,7 +58,7 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     switch (validationError) {
       case ValidationError.invalidField:
         return UIError.invalidField;
-        
+
       case ValidationError.requiredField:
         return UIError.requiredField;
         break;
@@ -95,5 +95,10 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
       _isLoading.value = false;
     }
+  }
+
+  @override
+  void goToSignUpPage() {
+    _navigateTo.value = "/signup";
   }
 }

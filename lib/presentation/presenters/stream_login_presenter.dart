@@ -108,4 +108,9 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   Stream<String> get navigateToStream => throw UnimplementedError();
+
+  @override
+  void goToSignUpPage() {
+    
+  }
 }
