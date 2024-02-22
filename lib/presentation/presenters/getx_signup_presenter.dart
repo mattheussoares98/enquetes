@@ -95,10 +95,12 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
   void _validateForm() {
     _isFormValid.value = _emailError.value == null &&
         _passwordError.value == null &&
-        _nameError == null &&
-        _passwordConfirmationError == null &&
+        _nameError.value == null &&
+        _passwordConfirmationError.value == null &&
         _email != null &&
-        _password != null;
+        _password != null &&
+        _name != null &&
+        _passwordConfirmation != null;
   }
 
   Future<void> signUp() async {
