@@ -1,5 +1,6 @@
 import 'package:enquetes/presentation/protocols/validation.dart';
 import 'package:enquetes/validation/protocols/protocols.dart';
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -17,7 +18,9 @@ class MinLengthValidation implements FieldValidation {
 
   @override
   ValidationError validate(String value) {
-    return ValidationError.invalidField;
+    return value != null && value.length >= length
+        ? null
+        : ValidationError.invalidField;
   }
 }
 
@@ -36,5 +39,31 @@ main() {
 
   test("Should return error if value is null", () {
     expect(sut.validate(null), ValidationError.invalidField);
+  });
+
+  test("Should return error if value is less than min size", () {
+    expect(
+      sut.validate(
+        faker.randomGenerator.string(4, min: 1),
+      ),
+      ValidationError.invalidField,
+    );
+  });
+  test("Should return null if value is greather than min size", () {
+    expect(
+      sut.validate(
+        faker.randomGenerator.string(14, min: 6),
+      ),
+      null,
+    );
+  });
+
+  test("Should return null if value is equal min size", () {
+    expect(
+      sut.validate(
+        faker.randomGenerator.string(5, min: 5),
+      ),
+      null,
+    );
   });
 }
