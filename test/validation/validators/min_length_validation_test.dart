@@ -1,28 +1,11 @@
-import 'package:enquetes/presentation/protocols/validation.dart';
-import 'package:enquetes/validation/protocols/protocols.dart';
-import 'package:faker/faker.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:mockito/mockito.dart';
+import 'package:faker/faker.dart';
 
-class MinLengthValidation implements FieldValidation {
-  final String fieldToValidate;
-  final int length;
-  MinLengthValidation({
-    @required this.fieldToValidate,
-    @required this.length,
-  });
+import 'package:enquetes/presentation/protocols/validation.dart';
 
-  @override
-  String get field => throw UnimplementedError();
-
-  @override
-  ValidationError validate(String value) {
-    return value != null && value.length >= length
-        ? null
-        : ValidationError.invalidField;
-  }
-}
+import 'package:enquetes/validation/validators/validators.dart';
 
 main() {
   MinLengthValidation sut;
