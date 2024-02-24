@@ -12,7 +12,7 @@ main() {
 
   setUp(() {
     sut = MinLengthValidation(
-      fieldToValidate: anyNamed("field"),
+      field: anyNamed("field"),
       length: 5,
     );
   });

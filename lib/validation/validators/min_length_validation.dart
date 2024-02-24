@@ -4,15 +4,12 @@ import '../../presentation/protocols/protocols.dart';
 import '../protocols/protocols.dart';
 
 class MinLengthValidation implements FieldValidation {
-  final String fieldToValidate;
+  final String field;
   final int length;
   MinLengthValidation({
-    @required this.fieldToValidate,
+    @required this.field,
     @required this.length,
   });
-
-  @override
-  String get field => throw UnimplementedError();
 
   @override
   ValidationError validate(String value) {
