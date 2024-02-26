@@ -31,7 +31,7 @@ void main() {
   PostExpectation mockValidationCall(String field) => when(
         validation.validate(
             field: field == null ? anyNamed('field') : field,
-            value: anyNamed('value')),
+            input: anyNamed('input')),
       );
 
   void mockValidation({String field, ValidationError value}) {
@@ -74,9 +74,16 @@ void main() {
   });
 
   test('Should call AddAccount with correct email', () {
+    Map formData = {
+      "email": email,
+      "password": null,
+      "name": null,
+      "passwordConfirmation": null
+    };
+
     sut.validateEmail(email);
 
-    verify(validation.validate(field: 'email', value: email)).called(1);
+    verify(validation.validate(field: 'email', input: formData)).called(1);
   });
 
   test('Should emit invalidFieldError if email is invalid', () {
@@ -124,22 +131,46 @@ void main() {
   });
 
   test('Should call Validation with correct password', () {
+    Map formData = {
+      "email": null,
+      "password": password,
+      "name": null,
+      "passwordConfirmation": null
+    };
+
     sut.validatePassword(password);
 
-    verify(validation.validate(field: 'password', value: password)).called(1);
+    verify(validation.validate(field: 'password', input: formData)).called(1);
   });
 
   test('Should call Validation with correct passwordConfirmation', () {
+    Map formData = {
+      "email": null,
+      "password": null,
+      "name": null,
+      "passwordConfirmation": passwordConfirmation
+    };
+
     sut.validatePasswordConfirmation(passwordConfirmation);
 
-    verify(validation.validate(
-            field: 'passwordConfirmation', value: passwordConfirmation))
-        .called(1);
+    verify(
+      validation.validate(
+        field: 'passwordConfirmation',
+        input: formData,
+      ),
+    ).called(1);
   });
   test('Should call Validation with correct name', () {
+    Map formData = {
+      "email": null,
+      "password": null,
+      "name": name,
+      "passwordConfirmation": null,
+    };
+
     sut.validateName(name);
 
-    verify(validation.validate(field: 'name', value: name)).called(1);
+    verify(validation.validate(field: 'name', input: formData)).called(1);
   });
 
   test('Should emit password error if validation fails', () {

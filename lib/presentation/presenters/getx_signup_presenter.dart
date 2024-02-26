@@ -46,30 +46,27 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
 
   void validateEmail(String email) {
     _email = email;
-    _emailError.value = _validateField(field: 'email', value: email);
+    _emailError.value = _validateField('email');
     _validateForm();
   }
 
   void validatePassword(String password) {
     _password = password;
-    _passwordError.value = _validateField(field: 'password', value: password);
+    _passwordError.value = _validateField('password');
     _validateForm();
   }
 
   @override
   void validateName(String name) {
     _name = name;
-    _nameError.value = _validateField(field: 'name', value: name);
+    _nameError.value = _validateField('name');
     _validateForm();
   }
 
   @override
   void validatePasswordConfirmation(String passwordConfirmation) {
     _passwordConfirmation = passwordConfirmation;
-    _passwordConfirmationError.value = _validateField(
-      field: 'passwordConfirmation',
-      value: passwordConfirmation,
-    );
+    _passwordConfirmationError.value = _validateField('passwordConfirmation');
     _validateForm();
   }
 
@@ -78,10 +75,17 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
     _navigateTo.value = "/login";
   }
 
-  UIError _validateField({@required String field, @required String value}) {
+  UIError _validateField(String field) {
+    Map formData = {
+      "email": _email,
+      "password": _password,
+      "name": _name,
+      "passwordConfirmation": _passwordConfirmation,
+    };
+
     ValidationError validationError = validation.validate(
       field: field,
-      value: value,
+      input: formData,
     );
 
     switch (validationError) {

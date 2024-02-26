@@ -50,20 +50,24 @@ class StreamLoginPresenter implements LoginPresenter {
 
   void validateEmail(String email) {
     _state.email = email;
-    _state.emailError = _validateField(field: 'email', value: email);
+    _state.emailError = _validateField('email');
     _update();
   }
 
   void validatePassword(String password) {
     _state.password = password;
-    _state.passwordError = _validateField(field: 'password', value: password);
+    _state.passwordError = _validateField('password');
     _update();
   }
 
-  UIError _validateField({@required String field, @required String value}) {
+  UIError _validateField(String field) {
+    Map formData = {
+      "email": _state.email,
+      "password": _state.password,
+    };
     ValidationError validationError = validation.validate(
       field: field,
-      value: value,
+      input: formData,
     );
 
     switch (validationError) {
@@ -110,7 +114,5 @@ class StreamLoginPresenter implements LoginPresenter {
   Stream<String> get navigateToStream => throw UnimplementedError();
 
   @override
-  void goToSignUpPage() {
-    
-  }
+  void goToSignUpPage() {}
 }

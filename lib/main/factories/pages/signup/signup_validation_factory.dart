@@ -10,6 +10,10 @@ Validation makeSignUpValidation() {
 List<FieldValidation> makeSignUpValidations() {
   return [
     ...ValidationBuilder.field('email').required().email().build(),
-    ...ValidationBuilder.field('password').required().build()
+    ...ValidationBuilder.field('password').required().build(),
+    ...ValidationBuilder.field("passwordConfirmation")
+        .required()
+        .sameAs("password")
+        .build(),
   ];
 }
