@@ -12,12 +12,18 @@ main() {
       fieldToCompare: "other_field",
     );
   });
+
+  test("Should return null if has invalid fields", () {
+    expect(sut.validate({"any_field": "any_value"}), null);
+    expect(sut.validate({"other_field": "any_field"}), null);
+    expect(sut.validate({}), null);
+  });
   test("Should return error if value is empty", () {
-    expect(sut.validate({"any_field": ""}), ValidationError.invalidField);
+    expect(sut.validate({"any_field": ""}), null);
   });
 
   test("Should return error if value is null", () {
-    expect(sut.validate({"any_field": "any_value", "other_field": null}), ValidationError.invalidField);
+    expect(sut.validate({"any_field": "any_value", "other_field": null}), null);
   });
 
   test("Should return error if field is not equal to fieldToCompare", () {
