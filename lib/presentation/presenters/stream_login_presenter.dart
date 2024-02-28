@@ -83,6 +83,7 @@ class StreamLoginPresenter implements LoginPresenter {
   }
 
   Future<void> auth() async {
+    _state.mainError = null;
     _state.isLoading = true;
     _update();
     try {
