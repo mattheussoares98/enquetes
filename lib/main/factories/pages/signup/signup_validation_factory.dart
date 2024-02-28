@@ -9,8 +9,9 @@ Validation makeSignUpValidation() {
 
 List<FieldValidation> makeSignUpValidations() {
   return [
+    ...ValidationBuilder.field('name').required().minLenght(3).build(),
     ...ValidationBuilder.field('email').required().email().build(),
-    ...ValidationBuilder.field('password').required().build(),
+    ...ValidationBuilder.field('password').required().minLenght(3).build(),
     ...ValidationBuilder.field("passwordConfirmation")
         .required()
         .sameAs("password")

@@ -1,9 +1,11 @@
+import 'package:equatable/equatable.dart';
+
 import '../../presentation/protocols/protocols.dart';
 import 'package:meta/meta.dart';
 
 import '../protocols/protocols.dart';
 
-class CompareFieldsValidation implements FieldValidation {
+class CompareFieldsValidation extends Equatable implements FieldValidation {
   final String fieldToCompare;
   final String field;
 
@@ -11,6 +13,8 @@ class CompareFieldsValidation implements FieldValidation {
     @required this.fieldToCompare,
     @required this.field,
   });
+
+  List get props => [fieldToCompare, field];
 
   @override
   ValidationError validate(Map input) {
